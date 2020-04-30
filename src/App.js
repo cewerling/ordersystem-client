@@ -7,6 +7,8 @@ function App() {
 
   const [sessionToken, setSessionToken] = useState('');
 
+  console.log('At top of App.js');
+
   useEffect(() => {
     if (localStorage.getItem('token')) {
       setSessionToken(localStorage.getItem('token'));

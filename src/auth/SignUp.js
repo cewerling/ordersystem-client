@@ -40,21 +40,87 @@ export default function SignUp(props) {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstNameError, setFirstNameError] = useState(false);
+  const [firstNameHelperText, setFirstNameHelperText] = useState('');
+  const [lastNameError, setLastNameError] = useState(false);
+  const [lastNameHelperText, setLastNameHelperText] = useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [emailHelperText, setEmailHelperText] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordHelperText, setPasswordHelperText] = useState('');
+
+  // Handle the form submit
 
   let handleSubmit = (event) => {
-    event.preventDefault();
-    fetch("http://localhost:3000/user/create", {
-        method: 'POST',
-        body: JSON.stringify({user:{firstName: firstName, lastName: lastName, email: email, password: password}}),
-        headers: new Headers({
-        'Content-Type': 'application/json'
+
+    var validationError = false;
+
+    // Validate First Name - At least 2 characters.
+    let nameRegEx = /^[a-zA-Z]{2}.?$/;
+    if (!nameRegEx.test(firstName)) {
+        validationError = true;
+        setFirstNameError(true);
+        setFirstNameHelperText('Invalid First Name');
+    } else {
+        setFirstNameError(false);
+        setFirstNameHelperText('');
+    }
+
+    // Validate Last Name - At least 2 characters.
+    if (!nameRegEx.test(lastName)) {
+        validationError = true;
+        setLastNameError(true);
+        setLastNameHelperText('Invalid Last Name');
+    } else {
+        setLastNameError(false);
+        setLastNameHelperText('');
+    }
+
+    // Validate Email Address
+    let emailRegEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (!emailRegEx.test(email)) {
+        validationError = true;
+        setEmailError(true);
+        setEmailHelperText('Invalid Email Address');
+    } else {
+        setEmailError(false);
+        setEmailHelperText('');
+    }
+
+    // Validate Paswword - 4 characters & at least 1 number or special character
+    // I changed it to require BOTH a digit & a special character.
+    let passwordRegEx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4}$/;
+    if (!passwordRegEx.test(password)) {
+        validationError = true;
+        setPasswordError(true);
+        setPasswordHelperText('Password must be at least 4 characters, including a digit & special character');
+    } else {
+        setPasswordError(false);
+        setPasswordHelperText('');
+    }
+
+    // If there were no errors, then create the User
+
+    if (!validationError) {
+    // if (!firstNameError && !lastNameError && !emailError && !passwordError) {
+
+        console.log('Made it inside if to do the fetch.');
+
+        event.preventDefault();
+        fetch("http://localhost:3000/user/create", {
+            method: 'POST',
+            body: JSON.stringify({user:{firstName: firstName, lastName: lastName, email: email, password: password}}),
+            headers: new Headers({
+            'Content-Type': 'application/json'
+            })
+        }).then(
+            (response) => response.json()
+        ).then((data) => {
+            props.updateToken(data.sessionToken)
         })
-    }).then(
-        (response) => response.json()
-    ).then((data) => {
-        props.updateToken(data.sessionToken)
-    })
-}
+
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -78,6 +144,8 @@ export default function SignUp(props) {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                error={firstNameError}
+                helperText={firstNameHelperText}
                 onChange={(e) => setFirstName(e.target.value)}
               />
             </Grid>
@@ -90,6 +158,8 @@ export default function SignUp(props) {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                error={lastNameError}
+                helperText={lastNameHelperText}
                 onChange={(e) => setLastName(e.target.value)}
               />
             </Grid>
@@ -102,6 +172,8 @@ export default function SignUp(props) {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                error={emailError}
+                helperText={emailHelperText}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
@@ -115,6 +187,8 @@ export default function SignUp(props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                error={passwordError}
+                helperText={passwordHelperText}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>

@@ -29,9 +29,10 @@ const useStyles = makeStyles((theme) => ({
 
 function MenuAppBar(props) {
   const classes = useStyles();
-//  const [auth, setAuth] = React.useState(false);
+//  const [auth, setAuth] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const token = () => {if (props.token == '') {return false} else {return true}};
 
   // const handleChange = (event) => {
     // setAuth(event.target.checked);
@@ -67,7 +68,8 @@ function MenuAppBar(props) {
           <Typography variant="h6" className={classes.title}>
             Order System
           </Typography>
-          {props.token && (
+          {/* {props.token && ( */}
+          { token ?
             <div>
               <IconButton
                 aria-label="account of current user"
@@ -100,11 +102,7 @@ function MenuAppBar(props) {
                 <MenuItem onClick={props.clickLogout}>Logout</MenuItem>
               </Menu>
             </div>
-          )}
-          {!props.token && (
-            <div>
-            </div>
-          )}
+          : <div></div> }
         </Toolbar>
       </AppBar>
     </div>

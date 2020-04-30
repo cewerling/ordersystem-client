@@ -10,6 +10,9 @@ const Auth = (props) => {
 
     const [signUp, setSignUp] = useState('N');  // Start with Sign-In
 
+    console.log('At top of Auth.js');
+    console.log('signUp = ' + signUp);
+
     const updateSignUpIn = (newToken) => {
         signUp=='N' ? setSignUp('Y') : setSignUp('N');
       }
