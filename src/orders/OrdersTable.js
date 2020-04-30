@@ -140,9 +140,39 @@ const useToolbarStyles = makeStyles((theme) => ({
     },
 }));
 
+const handleDelete = (selected, token, fetchOrders) => {
+    console.log('IN HANDLEDELETE FUNCTION!!!!!!!!!!!');
+    console.log(selected);
+    console.log(token);
+    console.log(fetchOrders);
+    selected.map( (orderId) => {
+        fetch(`http://localhost:3000/orders/${orderId}`, {
+            method: 'DELETE',
+            headers: new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': token
+            })
+        })
+        .then(() => fetchOrders())
+    })
+    selected.length = 0;   // Clear the selections array.
+}
+
+// const EnhancedTableToolbar = (props, selected) => {
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const { numSelected } = props;
+    const { selected } = props;
+    const { token } = props;
+    const { fetchOrders } = props;
+    console.log('********* numSelected ***********');
+    console.log(numSelected);
+    console.log('********* selected ***********');
+    console.log(selected);
+    console.log('********* token ***********');
+    console.log(token);
+    console.log('********* fetchOrders ***********');
+    console.log(fetchOrders);
 
     return (
         <Toolbar
@@ -162,12 +192,13 @@ const EnhancedTableToolbar = (props) => {
 
         {numSelected > 0 ? (
             <Tooltip title="Delete">
-            <IconButton aria-label="delete">
-                <DeleteIcon />
-            </IconButton>
+                <IconButton aria-label="delete" onClick={() => {handleDelete(selected, token, fetchOrders)}}>
+                    <DeleteIcon />
+                </IconButton>
             </Tooltip>
         ) : ( <div></div> )
         }
+        {/* } */}
         {/* ) : (
             <Tooltip title="Filter list">
             <IconButton aria-label="filter list">
@@ -215,6 +246,9 @@ export default function OrdersTable(props) {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const { token } = props;
+    const { fetchOrders } = props;
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -271,7 +305,7 @@ export default function OrdersTable(props) {
     return (
         <div className={classes.root}>
         <Paper className={classes.paper}>
-            <EnhancedTableToolbar numSelected={selected.length} />
+            <EnhancedTableToolbar numSelected={selected.length} selected={selected} token={token} fetchOrders={fetchOrders} />
             <TableContainer>
             <Table
                 className={classes.table}

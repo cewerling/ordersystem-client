@@ -21,11 +21,7 @@ const OrdersIndex = (props) => {
         })
         .then ( (res) => res.json())
         .then ( (ordersData) => {
-            console.log('#####################################');
-            console.log(ordersData);
-            console.log(typeof ordersData[0].orderPlacedDateTime)
             setOrders(ordersData);
-            console.log(orders);
         })
     }
 

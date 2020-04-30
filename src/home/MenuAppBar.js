@@ -73,7 +73,9 @@ function MenuAppBar(props) {
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
+                // onClick={(event) => handleMenu(event)}
+                // onClick={() => setAnchorEl(<button />)}
+                onClick={(event) => setAnchorEl(event.currentTarget)}
                 color="inherit"
               >
                 <AccountCircle />
