@@ -32,7 +32,11 @@ function MenuAppBar(props) {
 //  const [auth, setAuth] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const token = () => {if (props.token == '') {return false} else {return true}};
+  if (props.token =='') {
+    var token = false;
+  } else {
+    var token = true;
+  }
 
   // const handleChange = (event) => {
     // setAuth(event.target.checked);

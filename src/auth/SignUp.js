@@ -53,10 +53,14 @@ export default function SignUp(props) {
 
   let handleSubmit = (event) => {
 
+    event.preventDefault();
+
     var validationError = false;
 
-    // Validate First Name - At least 2 characters.
-    let nameRegEx = /^[a-zA-Z]{2}.?$/;
+    // Validate First Name - At least 2 characters with no spaces.
+    // let nameRegEx = /^[a-zA-Z]{2}.?$/;
+    // let nameRegEx = /^(?=.{2,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i;
+    let nameRegEx = /^(?=.{2,50}$)[a-zA-Z]*$/;
     if (!nameRegEx.test(firstName)) {
         validationError = true;
         setFirstNameError(true);
@@ -87,13 +91,13 @@ export default function SignUp(props) {
         setEmailHelperText('');
     }
 
-    // Validate Paswword - 4 characters & at least 1 number or special character
-    // I changed it to require BOTH a digit & a special character.
-    let passwordRegEx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4}$/;
-    if (!passwordRegEx.test(password)) {
+    // Validate Paswword - At least 5 characters
+    // let passwordRegEx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4}$/;
+    // if (!passwordRegEx.test(password)) {
+      if (password.length < 5) {
         validationError = true;
         setPasswordError(true);
-        setPasswordHelperText('Password must be at least 4 characters, including a digit & special character');
+        setPasswordHelperText('Password must be at least 5 characters');
     } else {
         setPasswordError(false);
         setPasswordHelperText('');
@@ -106,7 +110,6 @@ export default function SignUp(props) {
 
         console.log('Made it inside if to do the fetch.');
 
-        event.preventDefault();
         fetch("http://localhost:3000/user/create", {
             method: 'POST',
             body: JSON.stringify({user:{firstName: firstName, lastName: lastName, email: email, password: password}}),

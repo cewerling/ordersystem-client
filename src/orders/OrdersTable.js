@@ -1,7 +1,7 @@
 // Code from Material UI "Sorting & Selecting" table.
 // https://material-ui.com/components/tables/#sorting-amp-selecting
 
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -21,8 +21,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import Switch from '@material-ui/core/Switch';
+// import FilterListIcon from '@material-ui/icons/FilterList';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import CreateIcon from '@material-ui/icons/Create';
+import UpdateIcon from '@material-ui/icons/Update';
+import OrderCreate from './OrderCreate';
+import OrderUpdate from './OrderUpdate';
+import SnackbarMsg from './SnackbarMsg';
+
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -140,6 +146,11 @@ const useToolbarStyles = makeStyles((theme) => ({
     },
 }));
 
+
+// ********************
+// Handle Delete 
+// ********************
+
 const handleDelete = (selected, token, fetchOrders) => {
     console.log('IN HANDLEDELETE FUNCTION!!!!!!!!!!!');
     console.log(selected);
@@ -158,27 +169,119 @@ const handleDelete = (selected, token, fetchOrders) => {
     selected.length = 0;   // Clear the selections array.
 }
 
-// const EnhancedTableToolbar = (props, selected) => {
+
+// ********************
+// Handle Create 
+// ********************
+
+const handleCreate = (token, fetchOrders) => {
+    console.log('IN HANDLECreate FUNCTION!!!!!!!!!!!');
+    console.log(token);
+    console.log(fetchOrders);
+
+
+    // fetch(`http://localhost:3000/orders/`, {
+    //     method: 'POST',
+    //     headers: new Headers({
+    //     'Content-Type': 'application/json',
+    //     'Authorization': token
+    //     })
+    // })
+    // .then(() => fetchOrders())
+}
+
+
+// ********************
+// Handle Update 
+// ********************
+
+const handleUpdate = (selected, token, fetchOrders) => {
+    console.log('IN HANDLEUpdate FUNCTION!!!!!!!!!!!');
+    console.log(token);
+    console.log(fetchOrders);
+
+
+
+    let orderId = selected[0];
+
+    fetch(`http://localhost:3000/orders/${orderId}`, {
+        method: 'PUT',
+        headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': token
+        })
+    })
+    .then(() => fetchOrders())
+
+    selected.length = 0;   // Clear the selections array.
+
+}
+
+
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const { numSelected } = props;
     const { selected } = props;
     const { token } = props;
     const { fetchOrders } = props;
-    console.log('********* numSelected ***********');
-    console.log(numSelected);
-    console.log('********* selected ***********');
-    console.log(selected);
-    console.log('********* token ***********');
-    console.log(token);
-    console.log('********* fetchOrders ***********');
-    console.log(fetchOrders);
+    const { setUpdateActive } = props;
+    const { setCreateActive } = props;
+    const { setSelectedOrder } = props;
+    const { setCustomerName } = props;
+    const { setOrderNumber } = props;
+    const { setMobilePhone } = props;
+    const { setEmail } = props;
+    const { setHostName } = props;
+    const { setAddress1 } = props;
+    const { setCity } = props;
+    const { setRegion } = props;
+    const { setPostalCode } = props;
+    const { setOrderStatus } = props;
+    const { setCostSubtotal } = props;
+
+
+    const handleUpdateClick = () => {
+
+        fetch(`http://localhost:3000/orders/${selected[0]}`, {
+            method: 'GET',
+            headers: new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': token
+            })
+        })
+        .then ( (res) => res.json())
+        .then ( (orderData) => {
+            setSelectedOrder(orderData);
+            console.log('###################');
+            console.log('selectedOrder =');
+            console.log(orderData);
+            console.log(orderData[0].customerName);
+            setCustomerName(orderData[0].customerName)
+            setOrderNumber(orderData[0].orderNumber)
+            setMobilePhone(orderData[0].mobilePhone)
+            setEmail(orderData[0].email)
+            setHostName(orderData[0].hostName)
+            setAddress1(orderData[0].address1)
+            setCity(orderData[0].city)
+            setRegion(orderData[0].region)
+            setPostalCode(orderData[0].postalCode)
+            setOrderStatus(orderData[0].orderStatus)
+            setCostSubtotal(orderData[0].costSubtotal)
+        })
+
+
+        setUpdateActive(true)
+
+        // selected.length = 0;   // Clear the selections array.
+
+    };
+
 
     return (
         <Toolbar
-        className={clsx(classes.root, {
+            className={clsx(classes.root, {
             [classes.highlight]: numSelected > 0,
-        })}
+            })}
         >
         {numSelected > 0 ? (
             <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
@@ -189,14 +292,30 @@ const EnhancedTableToolbar = (props) => {
             Orders
             </Typography>
         )}
-
+        {numSelected == 1 ? (
+            <Tooltip title="Update">
+                {/* <IconButton aria-label="update" onClick={() => {handleUpdate(selected, token, fetchOrders)}}> */}
+                <IconButton aria-label="update" onClick={() => {handleUpdateClick()}}>
+                {/* <IconButton aria-label="update" onClick={() => {setUpdateActive(true)}}> */}
+                    <UpdateIcon />
+                </IconButton>
+            </Tooltip>
+            ) : (<div></div>)}
         {numSelected > 0 ? (
             <Tooltip title="Delete">
                 <IconButton aria-label="delete" onClick={() => {handleDelete(selected, token, fetchOrders)}}>
                     <DeleteIcon />
                 </IconButton>
             </Tooltip>
-        ) : ( <div></div> )
+        ) :
+        (
+            <Tooltip title="Create">
+                {/* <IconButton aria-label="create" onClick={() => {handleCreate(token, fetchOrders)}}> */}
+                <IconButton aria-label="create" onClick={() => {setCreateActive(true)}}>
+                    <CreateIcon />
+                </IconButton>
+            </Tooltip>
+        )
         }
         {/* } */}
         {/* ) : (
@@ -240,12 +359,28 @@ const useStyles = makeStyles((theme) => ({
 
 export default function OrdersTable(props) {
     const classes = useStyles();
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(true);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('calories');
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(0);
+    const [dense, setDense] = useState(true);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [updateActive, setUpdateActive] = useState(false);
+    const [createActive, setCreateActive] = useState(false);
+    const [displayMsg, setDisplayMsg] = useState(false);
+    const [snackBarMsg, setSnackBarMsg] = useState('');
+    const [selectedOrder, setSelectedOrder] = useState([]);
+    const [customerName, setCustomerName] = useState('');
+    const [orderNumber, setOrderNumber] = useState('');
+    const [mobilePhone, setMobilePhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [hostName, setHostName] = useState('');
+    const [address1, setAddress1] = useState('');
+    const [city, setCity] = useState('');
+    const [region, setRegion] = useState('');
+    const [postalCode, setPostalCode] = useState('');
+    const [orderStatus, setOrderStatus] = useState('');
+    const [costSubtotal, setCostSubtotal] = useState('');
 
     const { token } = props;
     const { fetchOrders } = props;
@@ -302,10 +437,36 @@ export default function OrdersTable(props) {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.orders.length - page * rowsPerPage);
 
+    // Clear the selected array (rows that have been checked)
+    // Pass this to the OrderUpdate component once the update has been completed.
+    const setSelectedLen0 = () => {
+        selected.length = 0;
+    }
+
     return (
         <div className={classes.root}>
         <Paper className={classes.paper}>
-            <EnhancedTableToolbar numSelected={selected.length} selected={selected} token={token} fetchOrders={fetchOrders} />
+            <EnhancedTableToolbar
+            numSelected={selected.length}
+            selected={selected}
+            token={token}
+            updateActive={updateActive}
+            createActive={createActive}
+            setUpdateActive={setUpdateActive}
+            setCreateActive={setCreateActive}
+            setSelectedOrder={setSelectedOrder}
+            setCustomerName={setCustomerName}
+            setOrderNumber={setOrderNumber}
+            setMobilePhone={setMobilePhone}
+            setEmail={setEmail}
+            setHostName={setHostName}
+            setAddress1={setAddress1}
+            setCity={setCity}
+            setRegion={setRegion}
+            setPostalCode={setPostalCode}
+            setOrderStatus={setOrderStatus}
+            setCostSubtotal={setCostSubtotal}
+            fetchOrders={fetchOrders} />
             <TableContainer>
             <Table
                 className={classes.table}
@@ -400,6 +561,29 @@ export default function OrdersTable(props) {
             control={<Switch checked={dense} onChange={handleChangeDense} />}
             label="Dense padding"
         /> */}
+        { createActive ? <OrderCreate setCreateActive={setCreateActive} token={props.token} fetchOrders={fetchOrders} setDisplayMsg={setDisplayMsg} setSnackBarMsg={setSnackBarMsg}  /> : <></>}
+        { updateActive ? <OrderUpdate
+        orderId1={selected[0]}
+        customerName1={customerName}
+        orderNumber1={orderNumber}
+        mobilePhone1={mobilePhone}
+        email1={email}
+        hostName1={hostName}
+        address11={address1}
+        city1={city}
+        region1={region}
+        postalCode1={postalCode}
+        orderStatus1={orderStatus}
+        costSubtotal1={costSubtotal}
+        setUpdateActive={setUpdateActive}
+        token={props.token}
+        fetchOrders={fetchOrders}
+        setDisplayMsg={setDisplayMsg}
+        setSnackBarMsg={setSnackBarMsg}
+        setSelectedLen0={setSelectedLen0} /> : <></>}
+        { displayMsg ?
+            <SnackbarMsg msg={snackBarMsg}/>
+          : <div></div>}
         </div>
     );
 }
