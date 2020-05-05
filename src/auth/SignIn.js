@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from '../components/Copyright';
+import APIURL from '../helpers/environment';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,7 +43,8 @@ export default function SignIn(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch('http://localhost:3000/user/signin', {
+    // fetch('http://localhost:3000/user/signin', {
+    fetch(`${APIURL}/user/signin`, {
         method: 'POST',
         body: JSON.stringify({user:{email: email, password: password}}),
         headers: new Headers({

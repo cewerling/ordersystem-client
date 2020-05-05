@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import APIURL from '../helpers/environment';
 
 
 const OrderCreate = (props) => {
@@ -220,7 +221,8 @@ const OrderCreate = (props) => {
             console.log(token);
 
 
-            fetch("http://localhost:3000/orders/", {
+            // fetch("http://localhost:3000/orders/", {
+            fetch(`${APIURL}/orders/`, {
                 method: 'POST',
                 body: JSON.stringify({order:orderData}),
                 headers: new Headers({

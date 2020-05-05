@@ -12,6 +12,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import APIURL from '../helpers/environment';
+
 
 const useStyles = makeStyles({
     table: {
@@ -38,8 +40,9 @@ const OrdersTable = (props) => {
     const classes = useStyles();
 
     const deleteOrder = (order) => {
-        fetch(`http://localhost:3000/orders/${order.id}`, {
-            method: 'DELETE',
+        // fetch(`http://localhost:3000/orders/${order.id}`, {
+        fetch(`${APIURL}/orders/${order.id}`, {
+                method: 'DELETE',
             headers: new Headers({
             'Content-Type': 'application/json',
             'Authorization': props.token

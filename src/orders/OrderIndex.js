@@ -3,7 +3,7 @@ import {Container, Row, Col} from '@material-ui/core';
 // import OrderCreate from './OrderCreate';
 import OrdersTable from './OrdersTable';
 // import OrderEdit from './OrderEdit';
-
+import APIURL from '../helpers/environment';
 
 
 const OrdersIndex = (props) => {
@@ -12,8 +12,9 @@ const OrdersIndex = (props) => {
     const [orderToUpdate, setOrderToUpdate] = useState({});
 
     const fetchOrders = () => {
-        fetch('http://localhost:3000/orders', {
-            method: 'GET',
+        // fetch('http://localhost:3000/orders`, {
+        fetch(`${APIURL}/orders`, {
+                method: 'GET',
             headers: new Headers ({
                 'Content-Type': 'application/json',
                 'Authorization': props.token

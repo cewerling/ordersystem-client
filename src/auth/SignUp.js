@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from '../components/Copyright';
+import APIURL from '../helpers/environment';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -110,7 +111,8 @@ export default function SignUp(props) {
 
         console.log('Made it inside if to do the fetch.');
 
-        fetch("http://localhost:3000/user/create", {
+        // fetch("http://localhost:3000/user/create", {
+        fetch(`${APIURL}/user/create`, {
             method: 'POST',
             body: JSON.stringify({user:{firstName: firstName, lastName: lastName, email: email, password: password}}),
             headers: new Headers({

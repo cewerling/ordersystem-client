@@ -28,6 +28,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import OrderCreate from './OrderCreate';
 import OrderUpdate from './OrderUpdate';
 import SnackbarMsg from './SnackbarMsg';
+import APIURL from '../helpers/environment';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -157,8 +158,9 @@ const handleDelete = (selected, token, fetchOrders) => {
     console.log(token);
     console.log(fetchOrders);
     selected.map( (orderId) => {
-        fetch(`http://localhost:3000/orders/${orderId}`, {
-            method: 'DELETE',
+        // fetch(`http://localhost:3000/orders/${orderId}`, {
+        fetch(`${APIURL}/orders/${orderId}`, {
+                method: 'DELETE',
             headers: new Headers({
             'Content-Type': 'application/json',
             'Authorization': token
@@ -180,7 +182,8 @@ const handleCreate = (token, fetchOrders) => {
     console.log(fetchOrders);
 
 
-    // fetch(`http://localhost:3000/orders/`, {
+    // // fetch(`http://localhost:3000/orders/`, {
+    // fetch(`${APIURL}/orders/`, {
     //     method: 'POST',
     //     headers: new Headers({
     //     'Content-Type': 'application/json',
@@ -204,8 +207,9 @@ const handleUpdate = (selected, token, fetchOrders) => {
 
     let orderId = selected[0];
 
-    fetch(`http://localhost:3000/orders/${orderId}`, {
-        method: 'PUT',
+    // fetch(`http://localhost:3000/orders/${orderId}`, {
+    fetch(`${APIURL}/orders/${orderId}`, {
+            method: 'PUT',
         headers: new Headers({
         'Content-Type': 'application/json',
         'Authorization': token
@@ -242,8 +246,9 @@ const EnhancedTableToolbar = (props) => {
 
     const handleUpdateClick = () => {
 
-        fetch(`http://localhost:3000/orders/${selected[0]}`, {
-            method: 'GET',
+        // fetch(`http://localhost:3000/orders/${selected[0]}`, {
+        fetch(`${APIURL}/orders/${selected[0]}`, {
+                method: 'GET',
             headers: new Headers({
             'Content-Type': 'application/json',
             'Authorization': token

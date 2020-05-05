@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import APIURL from '../helpers/environment';
 
 
 const OrderUpdate = (props) => {
@@ -287,8 +288,9 @@ const OrderUpdate = (props) => {
 
             // Update the Database
 
-            fetch(`http://localhost:3000/orders/${orderId}`, {
-                method: 'PUT',
+            // fetch(`http://localhost:3000/orders/${orderId}`, {
+            fetch(`${APIURL}/orders/${orderId}`, {
+                    method: 'PUT',
                 body: JSON.stringify({order:orderData}),
                 headers: new Headers({
                 'Content-Type': 'application/json',
