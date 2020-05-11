@@ -28,10 +28,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MenuAppBar(props) {
+
+  // It took me a while, but I eventually found that anchorEl & setAnchorEl could not be definied in MenuAppBar, but instead had to be defined in the parent (App.js), and then passed in.  That way, when logging out, the anchorEl could be set to null when clearing the token, so that the next time signing in, it isn't already set, and therefore shows the list menu.
+  const { anchorEl } = props;
+  const { setAnchorEl } = props;
+
   const classes = useStyles();
-//  const [auth, setAuth] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  // const [anchorEl, setAnchorEl] = useState(null);
+  // const open = Boolean(anchorEl);
+  const open = (anchorEl) => {
+    if (anchorEl == null) {
+      return false;
+    } else {
+      return true;
+    }}
+
   if (props.token =='') {
     var token = false;
   } else {
@@ -98,7 +109,9 @@ function MenuAppBar(props) {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                open={open}
+                // open={open()}
+                // open={(anchorEl) => {if (anchorEl==null) {return false} else {return true}}}
+                open={open(anchorEl)}
                 onClose={handleClose}
               >
                 {/* <MenuItem onClick={handleClose}>Profile</MenuItem>
@@ -106,7 +119,7 @@ function MenuAppBar(props) {
                 <MenuItem onClick={props.clickLogout}>Logout</MenuItem>
               </Menu>
             </div>
-          : <div></div> }
+          : null }
         </Toolbar>
       </AppBar>
     </div>

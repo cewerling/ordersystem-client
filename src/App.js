@@ -6,6 +6,7 @@ import OrderIndex from './orders/OrderIndex';
 function App() {
 
   const [sessionToken, setSessionToken] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
 
   console.log('At top of App.js');
 
@@ -24,6 +25,7 @@ function App() {
   const clearToken = () => {
     localStorage.clear();
     setSessionToken('');
+    setAnchorEl(null);
   }
 
   const protectedViews = () => {
@@ -34,7 +36,7 @@ function App() {
 
   return (
     <div>
-      <MenuAppBar token={sessionToken} clickLogout={clearToken} />
+      <MenuAppBar token={sessionToken} clickLogout={clearToken} anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
       {protectedViews()}
     </div>
   );

@@ -152,8 +152,9 @@ const useToolbarStyles = makeStyles((theme) => ({
 // Handle Delete 
 // ********************
 
-const handleDelete = (selected, token, fetchOrders) => {
-    console.log('IN HANDLEDELETE FUNCTION!!!!!!!!!!!');
+// const handleDelete = (selected, token, fetchOrders, setDisplayMsg, setSnackBarMsg) => {
+const handleDelete = (selected, token, fetchOrders, setDisplayMsg, setSnackBarStatus) => {
+        console.log('IN HANDLEDELETE FUNCTION!!!!!!!!!!!');
     console.log(selected);
     console.log(token);
     console.log(fetchOrders);
@@ -169,6 +170,10 @@ const handleDelete = (selected, token, fetchOrders) => {
         .then(() => fetchOrders())
     })
     selected.length = 0;   // Clear the selections array.
+    setDisplayMsg(true);
+    setSnackBarStatus('Order Deleted');
+    // setSnackBarMsg('Order Deleted');
+
 }
 
 
@@ -242,6 +247,9 @@ const EnhancedTableToolbar = (props) => {
     const { setPostalCode } = props;
     const { setOrderStatus } = props;
     const { setCostSubtotal } = props;
+    const { setDisplayMsg } = props;
+    const { setSnackBarStatus } = props;
+    // const { setSnackBarMsg } = props;
 
 
     const handleUpdateClick = () => {
@@ -308,7 +316,8 @@ const EnhancedTableToolbar = (props) => {
             ) : (<div></div>)}
         {numSelected > 0 ? (
             <Tooltip title="Delete">
-                <IconButton aria-label="delete" onClick={() => {handleDelete(selected, token, fetchOrders)}}>
+                <IconButton aria-label="delete" onClick={() => {handleDelete(selected, token, fetchOrders, setDisplayMsg, setSnackBarStatus)}}>
+                {/* <IconButton aria-label="delete" onClick={() => {handleDelete(selected, token, fetchOrders, setDisplayMsg, setSnackBarMsg)}}> */}
                     <DeleteIcon />
                 </IconButton>
             </Tooltip>
@@ -373,7 +382,8 @@ export default function OrdersTable(props) {
     const [updateActive, setUpdateActive] = useState(false);
     const [createActive, setCreateActive] = useState(false);
     const [displayMsg, setDisplayMsg] = useState(false);
-    const [snackBarMsg, setSnackBarMsg] = useState('');
+    // const [snackBarMsg, setSnackBarMsg] = useState('');
+    const [snackBarStatus, setSnackBarStatusBase] = useState('');
     const [selectedOrder, setSelectedOrder] = useState([]);
     const [customerName, setCustomerName] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
@@ -448,6 +458,9 @@ export default function OrdersTable(props) {
         selected.length = 0;
     }
 
+    // Handle the SnackBar Status/Message so that it will display every time.
+    const setSnackBarStatus = msg => setSnackBarStatusBase({ msg, date: new Date() });
+
     return (
         <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -471,7 +484,10 @@ export default function OrdersTable(props) {
             setPostalCode={setPostalCode}
             setOrderStatus={setOrderStatus}
             setCostSubtotal={setCostSubtotal}
-            fetchOrders={fetchOrders} />
+            fetchOrders={fetchOrders}
+            setDisplayMsg={setDisplayMsg}
+            // setSnackBarMsg={setSnackBarMsg} />
+            setSnackBarStatus={setSnackBarStatus} />
             <TableContainer>
             <Table
                 className={classes.table}
@@ -566,7 +582,8 @@ export default function OrdersTable(props) {
             control={<Switch checked={dense} onChange={handleChangeDense} />}
             label="Dense padding"
         /> */}
-        { createActive ? <OrderCreate setCreateActive={setCreateActive} token={props.token} fetchOrders={fetchOrders} setDisplayMsg={setDisplayMsg} setSnackBarMsg={setSnackBarMsg}  /> : <></>}
+        {/* { createActive ? <OrderCreate setCreateActive={setCreateActive} token={props.token} fetchOrders={fetchOrders} setDisplayMsg={setDisplayMsg} setSnackBarMsg={setSnackBarMsg}  /> : <></>} */}
+        { createActive ? <OrderCreate setCreateActive={setCreateActive} token={props.token} fetchOrders={fetchOrders} setDisplayMsg={setDisplayMsg} setSnackBarStatus={setSnackBarStatus}  /> : null}
         { updateActive ? <OrderUpdate
         orderId1={selected[0]}
         customerName1={customerName}
@@ -584,11 +601,15 @@ export default function OrdersTable(props) {
         token={props.token}
         fetchOrders={fetchOrders}
         setDisplayMsg={setDisplayMsg}
-        setSnackBarMsg={setSnackBarMsg}
-        setSelectedLen0={setSelectedLen0} /> : <></>}
+        setSnackBarStatus={setSnackBarStatus}
+        // setSnackBarMsg={setSnackBarMsg}
+        setSelectedLen0={setSelectedLen0} /> : null}
+        {/* setSelectedLen0={setSelectedLen0} /> : <></>} */}
         { displayMsg ?
-            <SnackbarMsg msg={snackBarMsg}/>
-          : <div></div>}
+            // <SnackbarMsg msg={snackBarMsg}/>
+            <SnackbarMsg key={snackBarStatus.date} msg={snackBarStatus.msg}/>
+          : null}
+          {/* : <div></div>} */}
         </div>
     );
 }

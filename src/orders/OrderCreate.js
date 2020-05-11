@@ -16,9 +16,10 @@ const OrderCreate = (props) => {
     const { setCreateActive } = props;  // May not need this if doing a dialog window.
     const { token } = props;
     const { fetchOrders } = props;
+    // 5/11/20 - setDisplayMsg MAY not be needed, especially with changing "setSnackBarMsg" to "setSnackBarStatus".
     const { setDisplayMsg } = props;
-    const { setSnackBarMsg } = props;
-
+    const { setSnackBarStatus } = props;
+    // const { setSnackBarMsg } = props;
     const [open, setOpen] = useState(true);
     const [customerName, setCustomerName] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
@@ -65,8 +66,9 @@ const OrderCreate = (props) => {
     const handleCreate = () => {
 
         var validationError = false;
-        setDisplayMsg(false);
-        setSnackBarMsg('');
+        setDisplayMsg(false);   // 5/11/20 - Probably not needed.
+        setSnackBarStatus('');  // 5/11/20 - Probably not needed.
+        // setSnackBarMsg('');
 
 
         // Validate Customer Name - 2-255 Characters
@@ -243,7 +245,8 @@ const OrderCreate = (props) => {
             setCreateActive(false);
             fetchOrders();
             setDisplayMsg(true);
-            setSnackBarMsg('Order Created');
+            setSnackBarStatus('Order Created');
+            // setSnackBarMsg('Order Created');
     
 
         }  // End if (!validationError)
